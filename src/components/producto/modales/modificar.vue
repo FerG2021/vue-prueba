@@ -36,6 +36,8 @@
                     nombre: null,
                     unidadMedida: null,
                 },
+                id: null,
+                producto: [],
 
                 url: "http://127.0.0.1:8000/api",
 
@@ -46,6 +48,9 @@
             abrir(id) {
                 console.log(id)
                 this.$refs.modal.abrir();
+                this.id = id
+
+                this.getDatos()
             },  
 
             cerrar() {
@@ -69,6 +74,22 @@
                 this.form.unidadMedida = ""
 
             },
+
+            async getDatos(){
+                await this.axios.get(this.url+"/productos/obtenerDatos/" + this.id)
+                .then(response => {
+                    this.producto = response.data                    
+                    console.log("producto")
+                    console.log(this.producto)
+                })
+
+                    this.form.nombre = this.producto.producto[0].nombre;
+                    this.form.unidadMedida = this.producto.producto[0].unidadMedida;
+
+
+                    console.log(this.form.nombre)
+
+            }
         },
     }    
 </script>

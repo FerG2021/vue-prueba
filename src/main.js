@@ -7,11 +7,13 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 
 import Modal from './components/modal/index.vue'
+import ModalEliminar from './components/modaleliminar/index.vue'
 
 import App from './App.vue'
 
 createApp(App)
     .use(ElementPlus) 
     .use(VueAxios, axios)
-    .component('Modal', Modal)   
+    .component('Modal', Modal)  
+    .component('ModalEliminar', ModalEliminar)   
     .mount('#app')

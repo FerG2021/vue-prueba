@@ -1,14 +1,15 @@
 <template>
   <div ref="indexProducto">
-    <el-button type="primary" @click="$refs.modalNuevo.abrir()">Nuevo</el-button>
 
 
     <el-card>
-      <el-card>
-        
-      </el-card>
+        <template #header>  
+          <h3>Productos</h3>
+        </template>
 
-      <el-card style="margin-top: 10px">
+        <el-button type="primary" @click="$refs.modalNuevo.abrir()" style="margin: auto; margin-right: 0px">Nuevo</el-button>
+
+
         <el-table :data="productos" style="width: 100%" v-loading="loading">
           <el-table-column prop="nombre" label="Nombre"  />
           <el-table-column prop="unidadMedida" label="Unidad medida"  />
@@ -19,14 +20,10 @@
           </el-table-column>
           <el-table-column prop="eliminar" label="Eliminar">
             <template #default="props">                
-              <el-button type="danger" round @click="eliminar(props.row.id)">Eliminar</el-button>                
+              <el-button type="danger" round @click="$refs.modalEliminar.abrir(props.row.id)">Eliminar</el-button>                
             </template>
-          </el-table-column>
-
-          
-          
+          </el-table-column>          
         </el-table>
-      </el-card>
     </el-card>
 
     <modal-nuevo
@@ -38,17 +35,24 @@
       ref="modalModificar"
       @actualizarTabla="obtenerTodos"
     ></modal-modificar>
+
+    <modal-eliminar
+      ref="modalEliminar"
+      @actualizarTabla="obtenerTodos"      
+    ></modal-eliminar>
   </div>
 </template>
 
 <script>
   import ModalNuevo from './modales/nuevo.vue'
   import ModalModificar from './modales/modificar.vue'
+  import ModalEliminar from './modales/eliminar.vue'
 
   export default {
     components:{
       ModalNuevo,
-      ModalModificar
+      ModalModificar,
+      ModalEliminar
     },
     data() {
       return {
@@ -77,6 +81,7 @@
 
     methods:{
       obtenerTodos(){
+        console.log("entrando a obtener todos")
         this.loading = true
         this.axios.get(this.url+"/productos/obtenerTodos")
           .then(response => {
@@ -94,12 +99,13 @@
 
         if (!confirmado) return;
 
-        this.axios.delete(this.url+"/productos/eliminar/"+id)
+        await this.axios.delete(this.url+"/productos/eliminar/"+id)
           .then(response => {
             this.productos = response.data
+            console.log("realiza la eliminacion")
           })
         
-            this.obtenerTodos()            
+          // this.obtenerTodos()            
 
 
       }
